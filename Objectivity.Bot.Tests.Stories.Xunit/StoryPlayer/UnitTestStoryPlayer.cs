@@ -12,6 +12,7 @@
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Builder.Dialogs.Internals;
     using Microsoft.Bot.Connector;
+    using Moq;
     using Newtonsoft.Json.Linq;
     using Player;
     using StoryModel;
@@ -211,9 +212,18 @@
 
         private async Task SendUserMessage(ILifetimeScope scope, string message)
         {
-            this.toBotMessageActivity.Text = message;
+            try
+            {
+                this.toBotMessageActivity.Text = message;
 
-            await TestConversation.SendAsync(scope, this.toBotMessageActivity);
+                await TestConversation.SendAsync(scope, this.toBotMessageActivity);
+            }
+            catch (MockException mockException)
+            {
+                throw new NotMatchedUtteranceException(
+                    $"Error while sending user message - matching intent couldn't be found. Check if unit test registers intent for the following utterance: {message}.",
+                    mockException);
+            }
         }
 
         private void ReadResponses(ILifetimeScope scope)

@@ -116,6 +116,7 @@
     <Compile Include="LuisDialogUnitTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoryPlayer\UnitTestStoryPlayer.cs" />
+    <Compile Include="StoryPlayer\NotMatchedUtteranceException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
