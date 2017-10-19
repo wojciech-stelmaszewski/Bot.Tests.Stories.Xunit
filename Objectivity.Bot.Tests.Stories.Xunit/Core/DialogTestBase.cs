@@ -30,7 +30,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using Xunit;
 
 namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 {
@@ -42,6 +41,7 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
     using Autofac;
     using Microsoft.Bot.Builder.Dialogs.Internals;
     using Microsoft.Bot.Connector;
+    using global::Xunit;
 
     public abstract class DialogTestBase
     {

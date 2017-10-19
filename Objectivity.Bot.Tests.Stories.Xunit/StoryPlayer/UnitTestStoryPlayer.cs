@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Objectivity.Bot.Tests.Stories.Xunit.StoryPlayer
+﻿namespace Objectivity.Bot.Tests.Stories.Xunit.StoryPlayer
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +8,7 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.StoryPlayer
     using Autofac;
     using Container;
     using Core;
+    using global::Xunit;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Builder.Dialogs.Internals;
     using Microsoft.Bot.Connector;
