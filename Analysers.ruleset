@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="General rules" Description="General code analysis rules." ToolsVersion="14.0">
+<RuleSet Name="General rules" Description="General code analysis rules." ToolsVersion="15.0">
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1000" Action="Error" />
     <Rule Id="CA1001" Action="Error" />
@@ -14,7 +14,6 @@
     <Rule Id="CA1016" Action="Error" />
     <Rule Id="CA1018" Action="Error" />
     <Rule Id="CA1019" Action="Error" />
-    <Rule Id="CA1024" Action="Error" />
     <Rule Id="CA1025" Action="Error" />
     <Rule Id="CA1027" Action="Error" />
     <Rule Id="CA1030" Action="Warning" />
@@ -64,11 +63,7 @@
     <Rule Id="CA1601" Action="Error" />
     <Rule Id="CA1701" Action="Error" />
     <Rule Id="CA1703" Action="Error" />
-    <Rule Id="CA1704" Action="Error" />
-    <Rule Id="CA1707" Action="Error" />
-    <Rule Id="CA1709" Action="Error" />
     <Rule Id="CA1710" Action="Error" />
-    <Rule Id="CA1711" Action="Error" />
     <Rule Id="CA1712" Action="Error" />
     <Rule Id="CA1713" Action="Error" />
     <Rule Id="CA1715" Action="Error" />
@@ -156,7 +151,6 @@
     <Rule Id="CA2220" Action="Error" />
     <Rule Id="CA2222" Action="Error" />
     <Rule Id="CA2224" Action="Error" />
-    <Rule Id="CA2227" Action="Error" />
     <Rule Id="CA2228" Action="Error" />
     <Rule Id="CA2229" Action="Error" />
     <Rule Id="CA2230" Action="Error" />
@@ -339,7 +333,9 @@
     <Rule Id="CS8094" Action="Error" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA0001" Action="None" />
     <Rule Id="SA1005" Action="None" />
+    <Rule Id="SA1118" Action="None" />
     <Rule Id="SA1200" Action="Error" />
     <Rule Id="SA1309" Action="None" />
     <Rule Id="SA1512" Action="None" />
@@ -348,5 +344,6 @@
     <Rule Id="SA1601" Action="None" />
     <Rule Id="SA1633" Action="None" />
     <Rule Id="SA1649" Action="None" />
+    <Rule Id="SA1652" Action="None" />
   </Rules>
 </RuleSet>

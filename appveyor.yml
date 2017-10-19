@@ -24,7 +24,9 @@ before_build:
 build:
   verbosity: detailed
   publish_nuget: true
-test: off
+test:
+  assemblies:
+    - '**\*.Tests.dll'
 assembly_info:
   patch: true
   file: \Objectivity.Bot.Tests.Stories.Xunit\Properties\AssemblyInfo.cs
