@@ -30,6 +30,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+using Xunit;
 
 namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 {
@@ -41,7 +42,6 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
     using Autofac;
     using Microsoft.Bot.Builder.Dialogs.Internals;
     using Microsoft.Bot.Connector;
-    using Xunit;
 
     public abstract class DialogTestBase
     {
@@ -78,7 +78,7 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 
         public static async Task AssertScriptAsync(ILifetimeScope container, params string[] pairs)
         {
-            Assert.NotEqual(0, pairs.Length);
+            Assert.NotEmpty(pairs);
 
             var toBot = MakeTestMessage();
 
@@ -94,7 +94,7 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
                 // if user has more to say, bot should have said something
                 if (index + 1 < pairs.Length)
                 {
-                    Assert.NotEqual(0, queue.Count);
+                    Assert.NotEmpty(queue);
                 }
 
                 while (queue.Count > 0)
@@ -137,7 +137,7 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
         public static void AssertNoMessages(ILifetimeScope scope)
         {
             var queue = scope.Resolve<Queue<IMessageActivity>>();
-            Assert.Equal(0, queue.Count);
+            Assert.Empty(queue);
         }
 
         public static string NewID()

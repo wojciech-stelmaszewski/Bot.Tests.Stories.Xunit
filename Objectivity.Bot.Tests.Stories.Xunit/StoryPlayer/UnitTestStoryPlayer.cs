@@ -1,4 +1,6 @@
-﻿namespace Objectivity.Bot.Tests.Stories.Xunit.StoryPlayer
+﻿using Xunit;
+
+namespace Objectivity.Bot.Tests.Stories.Xunit.StoryPlayer
 {
     using System;
     using System.Collections.Generic;
@@ -7,13 +9,13 @@
     using System.Threading.Tasks;
     using Autofac;
     using Container;
-    using ConversationTestUtils;
     using Core;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Builder.Dialogs.Internals;
     using Microsoft.Bot.Connector;
     using Newtonsoft.Json.Linq;
-    using Xunit;
+    using Player;
+    using StoryModel;
 
     internal class UnitTestStoryPlayer : IStoryPlayer
     {
@@ -70,7 +72,19 @@
                 }
             }
 
-            return new StoryResult { OutputValues = this.outputValues };
+            return this.GetResult();
+        }
+
+        private IStoryResult GetResult()
+        {
+            var result = new StoryResult();
+
+            foreach (var pair in this.outputValues)
+            {
+                result.OutputValues.Add(pair.Key, pair.Value);
+            }
+
+            return result;
         }
 
         private IContainer GetDialogTestContainer()
@@ -119,17 +133,17 @@
         {
             var message = this.receivedMessages.Dequeue();
 
-            switch (storyFrame.ComparisionType)
+            switch (storyFrame.ComparisonType)
             {
-                case ComparisionType.TextExact:
+                case ComparisonType.TextExact:
                     this.ProcessBotFrameTextExact(storyFrame, message);
                     break;
 
-                case ComparisionType.TextMatchRegex:
+                case ComparisonType.TextMatchRegex:
                     this.ProcessBotFrameTextMatchRegex(storyFrame, message);
                     break;
 
-                case ComparisionType.AttachmentListPresent:
+                case ComparisonType.AttachmentListPresent:
                     this.ProcessBotFrameListPresent(storyFrame, message);
                     break;
             }
@@ -166,12 +180,12 @@
 
         private async Task HandleUserStoryMessage(ILifetimeScope scope, IStoryFrame storyFrame)
         {
-            switch (storyFrame.ComparisionType)
+            switch (storyFrame.ComparisonType)
             {
-                case ComparisionType.TextExact:
+                case ComparisonType.TextExact:
                     await this.ProcessUserFrameTextExact(scope, storyFrame);
                     break;
-                case ComparisionType.Option:
+                case ComparisonType.Option:
                     await this.ProcessUserFrameOption(scope, storyFrame);
                     break;
             }

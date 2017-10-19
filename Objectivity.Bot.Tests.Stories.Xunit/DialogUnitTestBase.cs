@@ -4,9 +4,10 @@
     using System.Threading.Tasks;
     using Autofac;
     using Container;
-    using ConversationTestUtils;
     using Core;
     using Microsoft.Bot.Builder.Dialogs;
+    using Player;
+    using StoryModel;
     using StoryPlayer;
 
     public abstract class DialogUnitTestBase<TDialog> : DialogTestBase, IStoryPlayer

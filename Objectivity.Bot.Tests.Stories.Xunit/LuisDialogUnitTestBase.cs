@@ -7,13 +7,14 @@
     using System.Threading.Tasks;
     using Autofac;
     using Container;
-    using ConversationTestUtils;
     using Core;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Builder.Internals.Fibers;
     using Microsoft.Bot.Builder.Luis;
     using Microsoft.Bot.Builder.Luis.Models;
     using Moq;
+    using Player;
+    using StoryModel;
     using StoryPlayer;
 
     public abstract class LuisDialogUnitTestBase<TDialog> : LuisTestBase, IStoryPlayer
