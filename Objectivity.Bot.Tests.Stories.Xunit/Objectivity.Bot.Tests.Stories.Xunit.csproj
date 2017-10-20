@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\Analysers.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -105,14 +107,20 @@
   <ItemGroup>
     <Compile Include="Container\ITestContainerBuilder.cs" />
     <Compile Include="Container\TestContainerBuilderOptions.cs" />
+    <Compile Include="Core\ContextStruct.cs" />
+    <Compile Include="Core\ChannelID.cs" />
+    <Compile Include="Core\CodeException.cs" />
     <Compile Include="Core\DialogTestBase.cs" />
     <Compile Include="Container\TestContainerBuilder.cs" />
     <Compile Include="Core\FiberTestBase.cs" />
+    <Compile Include="Core\IMethod.cs" />
     <Compile Include="Core\LuisTestBase.cs" />
     <Compile Include="Core\IntentUtterance.cs" />
     <Compile Include="Core\MockConnectorFactory.cs" />
+    <Compile Include="Core\ResolveMoqAssembly.cs" />
     <Compile Include="Core\TestConversation.cs" />
     <Compile Include="DialogUnitTestBase.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="LuisDialogUnitTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoryPlayer\UnitTestStoryPlayer.cs" />

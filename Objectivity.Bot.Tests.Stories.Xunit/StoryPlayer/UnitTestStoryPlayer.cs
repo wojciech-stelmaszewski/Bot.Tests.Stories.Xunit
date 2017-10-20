@@ -75,6 +75,20 @@
             return this.GetResult();
         }
 
+        private static void ProcessBotFrameTextExact(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            Assert.NotNull(message);
+            Assert.Equal("message", message.Type);
+            Assert.Equal(storyFrame.Text, message.Text);
+        }
+
+        private static void ProcessBotFrameTextMatchRegex(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            Assert.NotNull(message);
+            Assert.Equal("message", message.Type);
+            Assert.Matches(storyFrame.Text, message.Text);
+        }
+
         private IStoryResult GetResult()
         {
             var result = new StoryResult();
@@ -89,7 +103,7 @@
 
         private IContainer GetDialogTestContainer()
         {
-            using (new FiberTestBase.ResolveMoqAssembly(this.testDialog))
+            using (new ResolveMoqAssembly(this.testDialog))
             {
                 var options = TestContainerBuilderOptions.MockConnectorFactory
                     | TestContainerBuilderOptions.ScopedQueue
@@ -136,31 +150,17 @@
             switch (storyFrame.ComparisonType)
             {
                 case ComparisonType.TextExact:
-                    this.ProcessBotFrameTextExact(storyFrame, message);
+                    ProcessBotFrameTextExact(storyFrame, message);
                     break;
 
                 case ComparisonType.TextMatchRegex:
-                    this.ProcessBotFrameTextMatchRegex(storyFrame, message);
+                    ProcessBotFrameTextMatchRegex(storyFrame, message);
                     break;
 
                 case ComparisonType.AttachmentListPresent:
                     this.ProcessBotFrameListPresent(storyFrame, message);
                     break;
             }
-        }
-
-        private void ProcessBotFrameTextExact(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            Assert.NotNull(message);
-            Assert.Equal("message", message.Type);
-            Assert.Equal(storyFrame.Text, message.Text);
-        }
-
-        private void ProcessBotFrameTextMatchRegex(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            Assert.NotNull(message);
-            Assert.Equal("message", message.Type);
-            Assert.Matches(storyFrame.Text, message.Text);
         }
 
         private void ProcessBotFrameListPresent(IStoryFrame storyFrame, IMessageActivity message)

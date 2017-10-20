@@ -1,15 +1,17 @@
-﻿// 
+﻿// Based on: https://github.com/Microsoft/BotBuilder/blob/master/CSharp/Tests/Microsoft.Bot.Builder.Tests/FiberTests.cs
+//
+//
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
-// 
+//
 // Microsoft Bot Framework: http://botframework.com
-// 
-// Bot Builder SDK GitHub:
+//
+// Bot Builder SDK Github:
 // https://github.com/Microsoft/BotBuilder
-// 
+//
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
-// 
+//
 // MIT License:
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -18,10 +20,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,14 +31,12 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
 
 namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 {
     using System;
     using System.IO;
     using System.Linq.Expressions;
-    using System.Reflection;
     using System.Runtime.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
@@ -46,17 +46,8 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 
     public abstract class FiberTestBase
     {
-        public struct C
-        {
-        }
-
-        public static readonly C Context = default(C);
+        public static readonly ContextStruct Context = default(ContextStruct);
         public static readonly CancellationToken Token = new CancellationTokenSource().Token;
-
-        public interface IMethod
-        {
-            Task<IWait<C>> CodeAsync<T>(IFiber<C> fiber, C context, IAwaitable<T> item, CancellationToken token);
-        }
 
         public static Moq.Mock<IMethod> MockMethod()
         {
@@ -69,18 +60,15 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
             return item => value.Equals(item.GetAwaiter().GetResult());
         }
 
-        protected sealed class CodeException : Exception
-        {
-        }
-
-        public static bool ExceptionOfType<T, E>(IAwaitable<T> item) where E : Exception
+        public static bool ExceptionOfType<T, TException>(IAwaitable<T> item)
+            where TException : Exception
         {
             try
             {
-                item.GetAwaiter().GetResult();
+                item?.GetAwaiter().GetResult();
                 return false;
             }
-            catch (E)
+            catch (TException)
             {
                 return true;
             }
@@ -90,12 +78,13 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
             }
         }
 
-        public static Expression<Func<IAwaitable<T>, bool>> ExceptionOfType<T, E>() where E : Exception
+        public static Expression<Func<IAwaitable<T>, bool>> ExceptionOfType<T, TException>()
+            where TException : Exception
         {
-            return item => ExceptionOfType<T, E>(item);
+            return item => ExceptionOfType<T, TException>(item);
         }
 
-        public static async Task PollAsync(IFiberLoop<C> fiber)
+        public static async Task PollAsync(IFiberLoop<ContextStruct> fiber)
         {
             IWait wait;
             do
@@ -108,39 +97,12 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
         public static IContainer Build()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new FiberModule<C>());
+            builder.RegisterModule(new FiberModule<ContextStruct>());
             return builder.Build();
         }
 
-        public sealed class ResolveMoqAssembly : IDisposable
-        {
-            private readonly object[] instances;
-            public ResolveMoqAssembly(params object[] instances)
-            {
-                SetField.NotNull(out this.instances, nameof(instances), instances);
-
-                AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomain_AssemblyResolve;
-            }
-            void IDisposable.Dispose()
-            {
-                AppDomain.CurrentDomain.AssemblyResolve -= this.CurrentDomain_AssemblyResolve;
-            }
-            private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs arguments)
-            {
-                foreach (var instance in this.instances)
-                {
-                    var type = instance.GetType();
-                    if (arguments.Name == type.Assembly.FullName)
-                    {
-                        return type.Assembly;
-                    }
-                }
-
-                return null;
-            }
-        }
-
-        public static void AssertSerializable<T>(ILifetimeScope scope, ref T item) where T : class
+        public static void AssertSerializable<T>(ILifetimeScope scope, ref T item)
+            where T : class
         {
             var formatter = scope.Resolve<IFormatter>();
 
@@ -152,5 +114,4 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
             }
         }
     }
-
 }

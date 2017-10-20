@@ -63,7 +63,8 @@
                     containerBuilder
                         .RegisterType<TDialog>()
                         .As<IDialog<object>>()
-                        .InstancePerDependency();
+                        .InstancePerDependency()
+                        .PropertiesAutowired();
 
                     this.RegisterAdditionalTypes(containerBuilder);
                 }

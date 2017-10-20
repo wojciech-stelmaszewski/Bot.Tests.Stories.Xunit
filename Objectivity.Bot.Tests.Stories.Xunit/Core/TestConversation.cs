@@ -1,15 +1,17 @@
-﻿// 
+﻿// Based on: https://github.com/Microsoft/BotBuilder/blob/master/CSharp/Library/Microsoft.Bot.Builder.Autofac/Dialogs/Conversation.cs
+//
+//
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
-// 
+//
 // Microsoft Bot Framework: http://botframework.com
-// 
-// Bot Builder SDK GitHub:
+//
+// Bot Builder SDK Github:
 // https://github.com/Microsoft/BotBuilder
-// 
+//
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
-// 
+//
 // MIT License:
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -18,10 +20,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,7 +31,6 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
 
 namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 {
@@ -47,7 +48,7 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
     /// </summary>
     public static class TestConversation
     {
-        private static readonly object gate = new object();
+        private static readonly object Gate = new object();
         private static IContainer container;
 
         static TestConversation()
@@ -61,7 +62,7 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
         {
             get
             {
-                lock (gate)
+                lock (Gate)
                 {
                     return container;
                 }
@@ -74,11 +75,12 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
         /// <param name="update">The delegate that represents the update to apply.</param>
         public static void UpdateContainer(Action<ContainerBuilder> update)
         {
-            lock (gate)
+            lock (Gate)
             {
                 var builder = new ContainerBuilder();
                 builder.RegisterModule(new DialogModule_MakeRoot());
-                update(builder);
+
+                update?.Invoke(builder);
                 container = builder.Build();
             }
         }
@@ -94,18 +96,18 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
         /// 4. Queues <see cref="IMessageActivity"/>s to be sent to the user.
         /// 5. Serializes the updated dialog state in the messages to be sent to the user.
         /// 
-        /// The <paramref name="MakeRoot"/> factory method is invoked for new conversations only,
+        /// The <paramref name="makeRoot"/> factory method is invoked for new conversations only,
         /// because existing conversations have the dialog stack and state serialized in the <see cref="IMessageActivity"/> data.
         /// </remarks>
         /// <param name="toBot">The message sent to the bot.</param>
-        /// <param name="MakeRoot">The factory method to make the root dialog.</param>
+        /// <param name="makeRoot">The factory method to make the root dialog.</param>
         /// <param name="token">The cancellation token.</param>
         /// <returns>A task that represents the message to send inline back to the user.</returns>
-        public static async Task SendAsync(IMessageActivity toBot, Func<IDialog<object>> MakeRoot, CancellationToken token = default(CancellationToken))
+        public static async Task SendAsync(IMessageActivity toBot, Func<IDialog<object>> makeRoot, CancellationToken token = default(CancellationToken))
         {
             using (var scope = DialogModule.BeginLifetimeScope(Container, toBot))
             {
-                DialogModule_MakeRoot.Register(scope, MakeRoot);
+                DialogModule_MakeRoot.Register(scope, makeRoot);
                 await SendAsync(scope, toBot, token);
             }
         }
@@ -136,7 +138,11 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
             var continuationMessage = conversationReference.GetPostToBotMessage();
             using (var scope = DialogModule.BeginLifetimeScope(Container, continuationMessage))
             {
-                Func<IDialog<object>> MakeRoot = () => { throw new InvalidOperationException(); };
+                IDialog<object> MakeRoot()
+                {
+                    throw new InvalidOperationException();
+                }
+
                 DialogModule_MakeRoot.Register(scope, MakeRoot);
 
                 await SendAsync(scope, toBot, token);

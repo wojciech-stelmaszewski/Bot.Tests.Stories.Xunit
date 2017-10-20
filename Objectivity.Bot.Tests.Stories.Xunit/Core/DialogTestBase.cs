@@ -1,15 +1,17 @@
-﻿// 
+﻿// Based on: https://raw.githubusercontent.com/Microsoft/BotBuilder/master/CSharp/Tests/Microsoft.Bot.Builder.Tests/DialogTaskTests.cs
+//
+//
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
-// 
+//
 // Microsoft Bot Framework: http://botframework.com
-// 
+//
 // Bot Builder SDK Github:
 // https://github.com/Microsoft/BotBuilder
-// 
+//
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
-// 
+//
 // MIT License:
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -18,10 +20,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,7 +31,6 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
 
 namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 {
@@ -39,18 +40,12 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
     using System.Threading;
     using System.Threading.Tasks;
     using Autofac;
+    using global::Xunit;
     using Microsoft.Bot.Builder.Dialogs.Internals;
     using Microsoft.Bot.Connector;
-    using global::Xunit;
 
     public abstract class DialogTestBase
     {
-        public static class ChannelID
-        {
-            public const string User = "testUser";
-            public const string Bot = "testBot";
-        }
-
         public static IMessageActivity MakeTestMessage()
         {
             return new Activity()
@@ -123,8 +118,12 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 
         public static void AssertMentions(string expectedText, IEnumerable<IMessageActivity> actualToUser)
         {
-            Assert.NotEqual(1, actualToUser.Count());
-            var index = actualToUser.Single().Text.IndexOf(expectedText, StringComparison.OrdinalIgnoreCase);
+            var actualToUserList = actualToUser.ToList();
+
+            Assert.NotEqual(1, actualToUserList.Count);
+
+            var index = actualToUserList.Single().Text.IndexOf(expectedText, StringComparison.OrdinalIgnoreCase);
+
             Assert.True(index >= 0);
         }
 
@@ -148,11 +147,6 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
         public static async Task AssertOutgoingActivity(ILifetimeScope container, Action<IMessageActivity> asserts)
         {
             var queue = container.Resolve<Queue<IMessageActivity>>();
-
-            if (queue.Count != 1)
-            {
-                // Assert.Fail("Expecting only 1 activity");
-            }
 
             var toUser = queue.Dequeue();
 

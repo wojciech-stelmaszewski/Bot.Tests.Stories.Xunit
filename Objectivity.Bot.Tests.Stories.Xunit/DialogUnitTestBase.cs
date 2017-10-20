@@ -17,13 +17,17 @@
             IStory story,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var builder = GetTestContainerBuilder();
+            var builder = this.GetTestContainerBuilder();
             var player = new UnitTestStoryPlayer(builder);
 
             return await player.Play(story, cancellationToken);
         }
 
-        private static ITestContainerBuilder GetTestContainerBuilder()
+        protected virtual void RegisterAdditionalTypes(ContainerBuilder builder)
+        {
+        }
+
+        private ITestContainerBuilder GetTestContainerBuilder()
         {
             var builder = new TestContainerBuilder
             {
@@ -32,7 +36,10 @@
                     containerBuilder
                         .RegisterType<TDialog>()
                         .As<IDialog<object>>()
-                        .InstancePerDependency();
+                        .InstancePerDependency()
+                        .PropertiesAutowired();
+
+                    this.RegisterAdditionalTypes(containerBuilder);
                 }
             };
 

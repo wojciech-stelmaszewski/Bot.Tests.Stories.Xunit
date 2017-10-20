@@ -71,11 +71,14 @@
                     .InstancePerLifetimeScope();
             }
 
-            foreach (var singleton in singletons)
+            if (singletons != null)
             {
-                builder
-                    .Register(c => singleton)
-                    .Keyed(FiberModule.Key_DoNotSerialize, singleton.GetType());
+                foreach (var singleton in singletons)
+                {
+                    builder
+                        .Register(c => singleton)
+                        .Keyed(FiberModule.Key_DoNotSerialize, singleton.GetType());
+                }
             }
 
             this.AdditionalTypesRegistration?.Invoke(builder);
