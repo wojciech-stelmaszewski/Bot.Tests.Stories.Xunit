@@ -146,7 +146,6 @@
         private void HandleBotStoryMessage(IStoryFrame storyFrame)
         {
             var message = this.receivedMessages.Dequeue();
-
             switch (storyFrame.ComparisonType)
             {
                 case ComparisonType.TextExact:
@@ -160,7 +159,27 @@
                 case ComparisonType.AttachmentListPresent:
                     this.ProcessBotFrameListPresent(storyFrame, message);
                     break;
+
+                case ComparisonType.TextExactWithSuggestions:
+                    ProcessBotFrameTextWithSuggestions(storyFrame, message);
+                    break;
+
+                case ComparisonType.TextMatchRegexWithSuggestions:
+                    ProcessBotFrameTextMatchRegexWithSuggestions(storyFrame, message);
+                    break;
             }
+        }
+
+        private static void ProcessBotFrameTextMatchRegexWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            ProcessBotFrameTextMatchRegex(storyFrame, message);
+            AssertSuggestions(storyFrame, message);
+        }
+
+        private static void ProcessBotFrameTextWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            ProcessBotFrameTextExact(storyFrame, message);
+            AssertSuggestions(storyFrame, message);
         }
 
         private void ProcessBotFrameListPresent(IStoryFrame storyFrame, IMessageActivity message)
@@ -244,6 +263,14 @@
         private IDialog<object> RootDialog()
         {
             return this.testDialog;
+        }
+
+        private static void AssertSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            var botStoryFrame = storyFrame as BotStoryFrame;
+
+            Assert.NotNull(botStoryFrame);
+            Assert.Equal(botStoryFrame.Suggestions, message.SuggestedActions.Actions.Select(s => new KeyValuePair<string, object>(s.Title, s.Value)));
         }
     }
 }
