@@ -75,7 +75,6 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
                     return await mockConnectorFactory.GetData(channelId, null, conversationId, BotStoreType.BotConversationData);
                 });
 
-
             botsClient.Setup(d => d.BotState.SetUserDataWithHttpMessagesAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<BotData>(), It.IsAny<Dictionary<string, List<string>>>(), It.IsAny<CancellationToken>()))
                 .Returns<string, string, BotData, Dictionary<string, List<string>>, CancellationToken>(async (channelId, userId, data, headers, token) =>
                 {
@@ -116,14 +115,13 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 
         protected IAddress AddressFrom(string channelId, string userId, string conversationId)
         {
-            var address = new Address
-            (
+            var address = new Address(
                 this.botId,
                 channelId,
                 userId ?? "AllUsers",
                 conversationId ?? "AllConversations",
-                "InvalidServiceUrl"
-            );
+                "InvalidServiceUrl");
+
             return address;
         }
 

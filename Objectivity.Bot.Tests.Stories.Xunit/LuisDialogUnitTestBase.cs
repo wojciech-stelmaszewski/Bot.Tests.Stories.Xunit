@@ -12,6 +12,7 @@
     using Microsoft.Bot.Builder.Internals.Fibers;
     using Microsoft.Bot.Builder.Luis;
     using Microsoft.Bot.Builder.Luis.Models;
+    using Microsoft.Bot.Connector;
     using Moq;
     using Player;
     using StoryModel;
@@ -22,12 +23,17 @@
     {
         private readonly List<IntentUtterance<TDialog>> intentUtterances = new List<IntentUtterance<TDialog>>();
 
+        protected ChannelAccount From { get; set; }
+
         public async Task<IStoryResult> Play(
             IStory story,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var builder = this.GetTestContainerBuilder();
-            var player = new UnitTestStoryPlayer(builder);
+            var player = new UnitTestStoryPlayer(builder)
+            {
+                From = this.From
+            };
 
             return await player.Play(story, cancellationToken);
         }
@@ -69,7 +75,6 @@
                     this.RegisterAdditionalTypes(containerBuilder);
                 }
             };
-
 
             return builder;
         }

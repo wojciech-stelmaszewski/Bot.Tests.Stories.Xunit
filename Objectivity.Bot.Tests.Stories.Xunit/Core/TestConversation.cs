@@ -95,7 +95,6 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
         /// 3. Resumes the conversation processes where the dialog suspended to wait for a <see cref="IMessageActivity"/>.
         /// 4. Queues <see cref="IMessageActivity"/>s to be sent to the user.
         /// 5. Serializes the updated dialog state in the messages to be sent to the user.
-        /// 
         /// The <paramref name="makeRoot"/> factory method is invoked for new conversations only,
         /// because existing conversations have the dialog stack and state serialized in the <see cref="IMessageActivity"/> data.
         /// </remarks>

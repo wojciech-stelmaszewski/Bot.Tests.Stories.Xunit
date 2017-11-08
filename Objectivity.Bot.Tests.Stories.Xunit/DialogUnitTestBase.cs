@@ -6,6 +6,7 @@
     using Container;
     using Core;
     using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Connector;
     using Player;
     using StoryModel;
     using StoryPlayer;
@@ -13,12 +14,17 @@
     public abstract class DialogUnitTestBase<TDialog> : DialogTestBase, IStoryPlayer
         where TDialog : IDialog<object>
     {
+        protected ChannelAccount From { get; set; }
+
         public async Task<IStoryResult> Play(
             IStory story,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var builder = this.GetTestContainerBuilder();
-            var player = new UnitTestStoryPlayer(builder);
+            var player = new UnitTestStoryPlayer(builder)
+            {
+                From = this.From
+            };
 
             return await player.Play(story, cancellationToken);
         }
@@ -42,7 +48,6 @@
                     this.RegisterAdditionalTypes(containerBuilder);
                 }
             };
-
 
             return builder;
         }

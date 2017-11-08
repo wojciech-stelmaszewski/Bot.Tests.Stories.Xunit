@@ -11,10 +11,9 @@
         }
 
         public NotMatchedUtteranceException(string message)
-            :base(message)
+            : base(message)
         {
         }
-
 
         public NotMatchedUtteranceException(string message, Exception innerException)
             : base(message, innerException)

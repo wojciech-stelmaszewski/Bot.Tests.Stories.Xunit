@@ -48,7 +48,7 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
     {
         public static IMessageActivity MakeTestMessage()
         {
-            return new Activity()
+            return new Activity
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = ActivityTypes.Message,
@@ -109,6 +109,7 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
                         default:
                             throw new NotImplementedException();
                     }
+
                     var expected = pairs[index];
 
                     Assert.Equal(expected, actual);

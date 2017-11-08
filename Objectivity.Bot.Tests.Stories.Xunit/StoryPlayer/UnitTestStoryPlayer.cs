@@ -33,11 +33,7 @@
             this.testContainerBuilder = testContainerBuilder;
         }
 
-        public UnitTestStoryPlayer(IDialog<object> testDialog, ITestContainerBuilder testContainerBuilder)
-        {
-            this.testDialog = testDialog;
-            this.testContainerBuilder = testContainerBuilder;
-        }
+        public ChannelAccount From { private get; set; }
 
         public async Task<IStoryResult> Play(IStory story, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -109,21 +105,16 @@
                     | TestContainerBuilderOptions.ScopedQueue
                     | TestContainerBuilderOptions.ResolveDialogFromContainer;
 
-                if (this.testDialog != null)
-                {
-                    return this.testContainerBuilder.Build(options, this.testDialog);
-                }
-                else
-                {
-                    return this.testContainerBuilder.Build(options);
-                }
+                return this.testDialog != null
+                    ? this.testContainerBuilder.Build(options, this.testDialog)
+                    : this.testContainerBuilder.Build(options);
             }
         }
 
         private void InitializeToBotMessageActivity()
         {
             this.toBotMessageActivity = DialogTestBase.MakeTestMessage();
-            this.toBotMessageActivity.From.Id = this.userId;
+            this.toBotMessageActivity.From = this.From ?? new ChannelAccount { Id = this.userId };
         }
 
         private async Task Process(StoryPlayerStep step, ILifetimeScope scope)
