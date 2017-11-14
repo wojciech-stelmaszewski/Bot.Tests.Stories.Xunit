@@ -158,7 +158,16 @@
                 case ComparisonType.TextMatchRegexWithSuggestions:
                     ProcessBotFrameTextMatchRegexWithSuggestions(storyFrame, message);
                     break;
+
+                case ComparisonType.Predicate:
+                    ProcessBotFramePredicate(storyFrame, message);
+                    break;
             }
+        }
+
+        private static void ProcessBotFramePredicate(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            Assert.True(storyFrame.MessageActivityPredicate(message));
         }
 
         private static void ProcessBotFrameTextMatchRegexWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
