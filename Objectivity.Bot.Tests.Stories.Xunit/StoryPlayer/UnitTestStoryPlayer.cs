@@ -17,7 +17,7 @@
     using Player;
     using StoryModel;
 
-    internal class UnitTestStoryPlayer : IStoryPlayer
+    public class UnitTestStoryPlayer : IStoryPlayer
     {
         private readonly IDictionary<string, object> outputValues = new Dictionary<string, object>();
         private readonly Queue<IMessageActivity> receivedMessages = new Queue<IMessageActivity>();
