@@ -145,7 +145,9 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
             return Guid.NewGuid().ToString();
         }
 
+#pragma warning disable 1998
         public static async Task AssertOutgoingActivity(ILifetimeScope container, Action<IMessageActivity> asserts)
+#pragma warning restore 1998
         {
             var queue = container.Resolve<Queue<IMessageActivity>>();
 

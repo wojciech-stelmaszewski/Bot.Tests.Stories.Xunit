@@ -85,6 +85,31 @@
             Assert.Matches(storyFrame.Text, message.Text);
         }
 
+        private static void ProcessBotFramePredicate(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            Assert.True(storyFrame.MessageActivityPredicate(message));
+        }
+
+        private static void ProcessBotFrameTextMatchRegexWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            ProcessBotFrameTextMatchRegex(storyFrame, message);
+            AssertSuggestions(storyFrame, message);
+        }
+
+        private static void ProcessBotFrameTextWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            ProcessBotFrameTextExact(storyFrame, message);
+            AssertSuggestions(storyFrame, message);
+        }
+
+        private static void AssertSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            var botStoryFrame = storyFrame as BotStoryFrame;
+
+            Assert.NotNull(botStoryFrame);
+            Assert.Equal(botStoryFrame.Suggestions, message.SuggestedActions.Actions.Select(s => new KeyValuePair<string, object>(s.Title, s.Value)));
+        }
+
         private IStoryResult GetResult()
         {
             var result = new StoryResult();
@@ -165,23 +190,6 @@
             }
         }
 
-        private static void ProcessBotFramePredicate(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            Assert.True(storyFrame.MessageActivityPredicate(message));
-        }
-
-        private static void ProcessBotFrameTextMatchRegexWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            ProcessBotFrameTextMatchRegex(storyFrame, message);
-            AssertSuggestions(storyFrame, message);
-        }
-
-        private static void ProcessBotFrameTextWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            ProcessBotFrameTextExact(storyFrame, message);
-            AssertSuggestions(storyFrame, message);
-        }
-
         private void ProcessBotFrameListPresent(IStoryFrame storyFrame, IMessageActivity message)
         {
             Assert.NotNull(message);
@@ -239,13 +247,13 @@
             }
             catch (MockException mockException)
             {
-                throw new NotMatchedUtteranceException(
+                throw new UnmatchedUtteranceException(
                     $"Error while sending user message - matching intent couldn't be found. Check if unit test registers intent for the following utterance: {message}.",
                     mockException);
             }
         }
 
-        private void ReadResponses(ILifetimeScope scope)
+        private void ReadResponses(IComponentContext scope)
         {
             var queue = scope.Resolve<Queue<IMessageActivity>>();
 
@@ -263,14 +271,6 @@
         private IDialog<object> RootDialog()
         {
             return this.testDialog;
-        }
-
-        private static void AssertSuggestions(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            var botStoryFrame = storyFrame as BotStoryFrame;
-
-            Assert.NotNull(botStoryFrame);
-            Assert.Equal(botStoryFrame.Suggestions, message.SuggestedActions.Actions.Select(s => new KeyValuePair<string, object>(s.Title, s.Value)));
         }
     }
 }
