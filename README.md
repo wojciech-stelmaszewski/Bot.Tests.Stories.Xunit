@@ -63,7 +63,7 @@ Example:
 
 
 ```cs
-public class PizzaOrderDialogTests : DialogUnitTestBase<PizzaOrderDialog>
+public class PizzaOrderDialogTests : LuisDialogUnitTestBase<EchoDialog>
 {
 	[Fact]
 	public async Task HelloTest()
