@@ -17,7 +17,7 @@
     using Player;
     using StoryModel;
 
-    internal class UnitTestStoryPlayer : IStoryPlayer
+    public class UnitTestStoryPlayer : IStoryPlayer
     {
         private readonly IDictionary<string, object> outputValues = new Dictionary<string, object>();
         private readonly Queue<IMessageActivity> receivedMessages = new Queue<IMessageActivity>();
@@ -33,7 +33,7 @@
             this.testContainerBuilder = testContainerBuilder;
         }
 
-        public ChannelAccount From { private get; set; }
+        public ChannelAccount From { get; set; }
 
         public async Task<IStoryResult> Play(IStory story, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -83,26 +83,6 @@
             Assert.NotNull(message);
             Assert.Equal("message", message.Type);
             Assert.Matches(storyFrame.Text, message.Text);
-        }
-
-        private static void AssertSuggestions(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            var botStoryFrame = storyFrame as BotStoryFrame;
-
-            Assert.NotNull(botStoryFrame);
-            Assert.Equal(botStoryFrame.Suggestions, message.SuggestedActions.Actions.Select(s => new KeyValuePair<string, object>(s.Title, s.Value)));
-        }
-
-        private static void ProcessBotFrameTextMatchRegexWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            ProcessBotFrameTextMatchRegex(storyFrame, message);
-            AssertSuggestions(storyFrame, message);
-        }
-
-        private static void ProcessBotFrameTextWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            ProcessBotFrameTextExact(storyFrame, message);
-            AssertSuggestions(storyFrame, message);
         }
 
         private IStoryResult GetResult()
@@ -178,7 +158,28 @@
                 case ComparisonType.TextMatchRegexWithSuggestions:
                     ProcessBotFrameTextMatchRegexWithSuggestions(storyFrame, message);
                     break;
+
+                case ComparisonType.Predicate:
+                    ProcessBotFramePredicate(storyFrame, message);
+                    break;
             }
+        }
+
+        private static void ProcessBotFramePredicate(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            Assert.True(storyFrame.MessageActivityPredicate(message));
+        }
+
+        private static void ProcessBotFrameTextMatchRegexWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            ProcessBotFrameTextMatchRegex(storyFrame, message);
+            AssertSuggestions(storyFrame, message);
+        }
+
+        private static void ProcessBotFrameTextWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            ProcessBotFrameTextExact(storyFrame, message);
+            AssertSuggestions(storyFrame, message);
         }
 
         private void ProcessBotFrameListPresent(IStoryFrame storyFrame, IMessageActivity message)
@@ -262,6 +263,14 @@
         private IDialog<object> RootDialog()
         {
             return this.testDialog;
+        }
+
+        private static void AssertSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            var botStoryFrame = storyFrame as BotStoryFrame;
+
+            Assert.NotNull(botStoryFrame);
+            Assert.Equal(botStoryFrame.Suggestions, message.SuggestedActions.Actions.Select(s => new KeyValuePair<string, object>(s.Title, s.Value)));
         }
     }
 }
