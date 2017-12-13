@@ -85,6 +85,26 @@
             Assert.Matches(storyFrame.Text, message.Text);
         }
 
+        private static void AssertSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            var botStoryFrame = storyFrame as BotStoryFrame;
+
+            Assert.NotNull(botStoryFrame);
+            Assert.Equal(botStoryFrame.Suggestions, message.SuggestedActions.Actions.Select(s => new KeyValuePair<string, object>(s.Title, s.Value)));
+        }
+
+        private static void ProcessBotFrameTextMatchRegexWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            ProcessBotFrameTextMatchRegex(storyFrame, message);
+            AssertSuggestions(storyFrame, message);
+        }
+
+        private static void ProcessBotFrameTextWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
+        {
+            ProcessBotFrameTextExact(storyFrame, message);
+            AssertSuggestions(storyFrame, message);
+        }
+
         private IStoryResult GetResult()
         {
             var result = new StoryResult();
@@ -159,18 +179,6 @@
                     ProcessBotFrameTextMatchRegexWithSuggestions(storyFrame, message);
                     break;
             }
-        }
-
-        private static void ProcessBotFrameTextMatchRegexWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            ProcessBotFrameTextMatchRegex(storyFrame, message);
-            AssertSuggestions(storyFrame, message);
-        }
-
-        private static void ProcessBotFrameTextWithSuggestions(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            ProcessBotFrameTextExact(storyFrame, message);
-            AssertSuggestions(storyFrame, message);
         }
 
         private void ProcessBotFrameListPresent(IStoryFrame storyFrame, IMessageActivity message)
@@ -254,14 +262,6 @@
         private IDialog<object> RootDialog()
         {
             return this.testDialog;
-        }
-
-        private static void AssertSuggestions(IStoryFrame storyFrame, IMessageActivity message)
-        {
-            var botStoryFrame = storyFrame as BotStoryFrame;
-
-            Assert.NotNull(botStoryFrame);
-            Assert.Equal(botStoryFrame.Suggestions, message.SuggestedActions.Actions.Select(s => new KeyValuePair<string, object>(s.Title, s.Value)));
         }
     }
 }
