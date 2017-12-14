@@ -18,7 +18,7 @@ Install-Package Objectivity.Bot.Tests.Stories.Xunit
 
 ## Limitations
 
-At the moment test base classes are permitted only for dialogs returning object type.
+At the moment test base classes are permitted only for dialogs returning object type. Story recorder used in this library does not allow to recognize user identity during conversation test.
 
 ## Usage
 

@@ -101,7 +101,13 @@ namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 
         public IStateClient MakeStateClient()
         {
-            return this.stateClient ?? (this.stateClient = MockIBots(this).Object);
+            if (this.stateClient == null)
+            {
+                var mockStateClient = MockIBots(this);
+                this.stateClient = mockStateClient.Object;
+            }
+
+            return this.stateClient;
         }
 
         protected IAddress AddressFrom(string channelId, string userId, string conversationId)

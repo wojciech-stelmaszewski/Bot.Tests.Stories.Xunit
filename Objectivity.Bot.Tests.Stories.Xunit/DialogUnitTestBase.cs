@@ -21,10 +21,7 @@
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var builder = this.GetTestContainerBuilder();
-            var player = new UnitTestStoryPlayer(builder)
-            {
-                From = this.From
-            };
+            var player = new UnitTestStoryPlayer(builder);
 
             return await player.Play(story, cancellationToken);
         }
@@ -39,11 +36,7 @@
             {
                 AdditionalTypesRegistration = containerBuilder =>
                 {
-                    containerBuilder
-                        .RegisterType<TDialog>()
-                        .As<IDialog<object>>()
-                        .InstancePerDependency()
-                        .PropertiesAutowired();
+                    UnitTestBaseRegistrator.RegisterTestComponents<TDialog>(containerBuilder, this.From);
 
                     this.RegisterAdditionalTypes(containerBuilder);
                 }

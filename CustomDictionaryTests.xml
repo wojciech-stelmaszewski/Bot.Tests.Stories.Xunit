@@ -6,10 +6,9 @@
       <Word></Word>
     </Unrecognized>
     -->
-	<!--
     <Recognized>
+		<Word>Xunit</Word>
     </Recognized>
-	-->
     <!--
     <Deprecated>
       <Term PreferredAlternate=""></Term>
