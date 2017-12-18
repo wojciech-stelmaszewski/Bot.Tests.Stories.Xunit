@@ -39,7 +39,7 @@
 
             var r =
                 builder
-                    .Register<Queue<IMessageActivity>>(c => new Queue<IMessageActivity>())
+                    .Register(c => new Queue<IMessageActivity>())
                     .AsSelf();
 
             if (options.HasFlag(TestContainerBuilderOptions.ScopedQueue))
@@ -65,7 +65,7 @@
 
             if (options.HasFlag(TestContainerBuilderOptions.LastWriteWinsCachingBotDataStore))
             {
-                builder.Register<CachingBotDataStore>(c => new CachingBotDataStore(c.ResolveKeyed<IBotDataStore<BotData>>(typeof(ConnectorStore)), CachingBotDataStoreConsistencyPolicy.LastWriteWins))
+                builder.Register(c => new CachingBotDataStore(c.ResolveKeyed<IBotDataStore<BotData>>(typeof(ConnectorStore)), CachingBotDataStoreConsistencyPolicy.LastWriteWins))
                     .As<IBotDataStore<BotData>>()
                     .AsSelf()
                     .InstancePerLifetimeScope();

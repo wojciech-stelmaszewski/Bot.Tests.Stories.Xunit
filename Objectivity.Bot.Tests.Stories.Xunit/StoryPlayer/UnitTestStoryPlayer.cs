@@ -24,7 +24,7 @@
         public async Task<IStoryResult> Play(IStory story, CancellationToken cancellationToken = default(CancellationToken))
         {
             using (var container = this.GetDialogTestContainer())
-            using (var scopeContext = this.InitializeScopeContext(container))
+            using (var scopeContext = InitializeScopeContext(container))
             {
                 var testDialog = container.Resolve<IDialog<object>>();
                 var storyPerformer = container.Resolve<IStoryPerformer>();
@@ -39,6 +39,18 @@
             return new StoryResult();
         }
 
+        private static IScopeContext InitializeScopeContext(IContainer container)
+        {
+            var scopeContext = new ScopeContext(container);
+            var builder = new ContainerBuilder();
+            var module = new UnitTestStoryPlayerModule(scopeContext);
+
+            builder.RegisterModule(module);
+            builder.Update(container);
+
+            return scopeContext;
+        }
+
         private IContainer GetDialogTestContainer()
         {
             using (new ResolveMoqAssembly())
@@ -49,18 +61,6 @@
 
                 return this.testContainerBuilder.Build(options);
             }
-        }
-
-        private IScopeContext InitializeScopeContext(IContainer container)
-        {
-            var scopeContext = new ScopeContext(container);
-            var builder = new ContainerBuilder();
-            var module = new UnitTestStoryPlayerModule(scopeContext);
-
-            builder.RegisterModule(module);
-            builder.Update(container);
-
-            return scopeContext;
         }
     }
 }
