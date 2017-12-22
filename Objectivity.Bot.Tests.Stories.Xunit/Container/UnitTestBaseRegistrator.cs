@@ -20,8 +20,7 @@
             containerBuilder
                 .RegisterType<TDialog>()
                 .Keyed<IDialog<object>>(Consts.TargetDialogKey)
-                .InstancePerDependency()
-                .PropertiesAutowired();
+                .InstancePerDependency();
         }
     }
 }
