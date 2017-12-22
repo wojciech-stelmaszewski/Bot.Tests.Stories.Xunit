@@ -12,15 +12,7 @@ init:
         Update-AppveyorBuild -Version "$env:APPVEYOR_REPO_TAG_NAME"
       }
 before_build:
-- cmd: nuget restore
-- ps: >-
-    if ($env:APPVEYOR_REPO_TAG -eq "true")
-
-    {
-
-    .\Update-Nuspec.ps1 -version "$env:APPVEYOR_REPO_TAG_NAME"
-
-    }
+- cmd: dotnet restore
 build:
   verbosity: detailed
   publish_nuget: true
@@ -38,7 +30,7 @@ dotnet_csproj:
   informational_version: '{version}'
 environment:
   NugetApiKey:
-    secure: DIE2y66RzXWvp2Q0wIOLlBTjxILBGeHyyg3pjwWjdVrggzuj9BuMWCdfHFmt9nt2
+    secure: ZDpU+qPlLxIhcfhYnqYxazI6g9gwt6e086vlBogpXETSL9C7WTbLdaH6rPEOz3v7
 deploy:
   - provider: NuGet
     api_key: $(NugetApiKey)

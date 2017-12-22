@@ -9,13 +9,22 @@
     <FileVersion>0.0.0.0</FileVersion>
     <InformationalVersion>0.0.0.0</InformationalVersion>
     <IsPackable>true</IsPackable>
+    <Authors>Objectivity Bespoke Software Specialists</Authors>
+    <Company>Objectivity Bespoke Software Specialists</Company>
+    <Description>Tests library for Bot Framework dialogs XUnit tests</Description>
+    <Copyright></Copyright>
+    <PackageTags>C#, bot.framework, xunit</PackageTags>
+    <PackageProjectUrl>https://github.com/ObjectivityLtd/Bot.Tests.Stories.Xunit</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ObjectivityLtd/Bot.Tests.Stories.Xunit</RepositoryUrl>
+    <PackageLicenseUrl>https://opensource.org/licenses/mit-license.php</PackageLicenseUrl>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Bot.Builder" Version="3.12.2.4" />
     <PackageReference Include="Moq" Version="4.7.145" />
-    <PackageReference Include="Objectivity.Bot.Tests.Stories" Version="0.0.14" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" />
+    <PackageReference Include="Objectivity.Bot.Tests.Stories" Version="0.0.15" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="All" />
     <PackageReference Include="xunit" Version="2.3.1" />
   </ItemGroup>
 
