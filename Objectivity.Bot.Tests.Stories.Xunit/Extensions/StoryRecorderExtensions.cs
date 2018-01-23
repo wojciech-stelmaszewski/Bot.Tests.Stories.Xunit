@@ -22,11 +22,16 @@
             return GetResultStory(recorder, DialogStatus.Failed);
         }
 
-        private static IStory GetResultStory(IStoryRecorder storyRecorder, DialogStatus resultType, Predicate<object> resultPredicate = null)
+        public static IStory DialogFailedWithExceptionOfType<TExceptionType>(this IStoryRecorder recorder)
+        {
+            return GetResultStory(recorder, DialogStatus.Failed, null, typeof(TExceptionType));
+        }
+
+        private static IStory GetResultStory(IStoryRecorder storyRecorder, DialogStatus resultType, Predicate<object> resultPredicate = null, Type exceptionType = null)
         {
             var story = storyRecorder.Rewind();
 
-            story.AddStoryFrame(new DialogStoryFrame(resultType, resultPredicate));
+            story.AddStoryFrame(new DialogStoryFrame(resultType, resultPredicate,  exceptionType));
 
             return story;
         }

@@ -7,10 +7,11 @@
 
     public class DialogStoryFrame : IStoryFrame
     {
-        public DialogStoryFrame(DialogStatus dialogStatus, Predicate<object> resultPredicate = null)
+        public DialogStoryFrame(DialogStatus dialogStatus, Predicate<object> resultPredicate = null, Type exceptionType = null)
         {
             this.DialogStatus = dialogStatus;
             this.ResultPredicate = resultPredicate;
+            this.ExceptionType = exceptionType;
         }
 
         public DialogStatus DialogStatus { get; }
@@ -30,5 +31,7 @@
         public string OptionOutputPlaceholder { get; }
 
         public string Text { get; }
+
+        public Type ExceptionType { get; }
     }
 }

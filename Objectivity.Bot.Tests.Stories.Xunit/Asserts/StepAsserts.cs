@@ -14,6 +14,7 @@
 
     public static class StepAsserts
     {
+        private const string WrongExceptionTypeMessageFormat = "Expected dialog fail with exception of type = '{0}', actual exception type = '{1}'";
         private const string NotEqualDialogStatusMessageFormat = "Expected dialog status = '{0}', actual status = '{1}'";
         private const string NotEqualDialogResultMessageFormat = "Dialog result = '{0}' doesn't match test predicate.";
         private const string WrongDialogResultTypeMessageFormat = "Dialog result = '{0}' is not of an expected type.";
@@ -41,10 +42,10 @@
             }
 
             var notEqualStatusesMessage = string.Format(
-                    CultureInfo.CurrentCulture,
-                    NotEqualDialogStatusMessageFormat,
-                    dialogStoryFrame.DialogStatus,
-                    dialogResult.DialogStatus);
+                CultureInfo.CurrentCulture,
+                NotEqualDialogStatusMessageFormat,
+                dialogStoryFrame.DialogStatus,
+                dialogResult.DialogStatus);
 
             Assert.True(dialogStoryFrame.DialogStatus == dialogResult.DialogStatus, notEqualStatusesMessage);
 
@@ -73,6 +74,21 @@
 
                     Assert.True(false, wrongDialogResultTypeMessage);
                 }
+            }
+
+            if (dialogStoryFrame.ExceptionType != null)
+            {
+                var exceptionType = dialogResult.Exception.GetType();
+
+                var wrongExceptionTypeMessage = string.Format(
+                    CultureInfo.CurrentCulture,
+                    WrongExceptionTypeMessageFormat,
+                    dialogStoryFrame.ExceptionType.Name,
+                    exceptionType.Name);
+
+                Assert.True(
+                    dialogResult.Exception.GetType() == dialogStoryFrame.ExceptionType,
+                    wrongExceptionTypeMessage);
             }
         }
 
