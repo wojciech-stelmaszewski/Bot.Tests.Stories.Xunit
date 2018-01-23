@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
+    using Objectivity.Bot.Tests.Stories.Xunit.Core;
     using StoryPerformer;
 
     [Serializable]
@@ -11,7 +12,7 @@
     {
         private readonly IDialog<object> wrappedDialog;
 
-        public WrapperDialog(IDialog<object> wrappedDialog)
+        public WrapperDialog(IDialog<object> wrappedDialog, WrappedDialogResult wrappedDialogResult)
         {
             this.wrappedDialog = wrappedDialog;
         }

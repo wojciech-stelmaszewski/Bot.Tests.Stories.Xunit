@@ -4,6 +4,7 @@
     using Core;
     using Dialogs;
     using Microsoft.Bot.Builder.Dialogs;
+    using Objectivity.Bot.Tests.Stories.Xunit.Asserts;
     using StoryPerformer;
 
     public class UnitTestStoryPlayerModule : Module
@@ -19,9 +20,14 @@
         {
             base.Load(builder);
 
+            builder.RegisterType<WrappedDialogResult>();
+            builder.RegisterType<StoryAsserts>();
+
             builder
                 .Register<IDialog<object>>(ctx =>
-                    new WrapperDialog(ctx.ResolveKeyed<IDialog<object>>(Consts.TargetDialogKey)))
+                    new WrapperDialog(
+                        ctx.ResolveKeyed<IDialog<object>>(Consts.TargetDialogKey),
+                        ctx.Resolve<WrappedDialogResult>()))
                 .As<IDialog<object>>()
                 .InstancePerDependency();
 

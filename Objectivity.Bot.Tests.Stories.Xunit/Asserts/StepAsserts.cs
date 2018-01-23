@@ -7,6 +7,7 @@
     using global::Xunit;
     using Microsoft.Bot.Connector;
     using Newtonsoft.Json.Linq;
+    using Objectivity.Bot.Tests.Stories.Xunit.Core;
     using StoryModel;
     using StoryPerformer;
     using StoryPlayer;
@@ -26,6 +27,13 @@
                     AssertUserStepMessage(storyStep, performanceStep, options);
                     break;
             }
+        }
+
+        public static void AssertDialogFinishStep(StoryStep storyStep, WrappedDialogResult dialogResult)
+        {
+            var dialogStoryFrame = storyStep.StoryFrame as DialogStoryFrame;
+
+            Assert.Equal(dialogStoryFrame.DialogStatus, dialogResult.DialogStatus);
         }
 
         private static void AssertBotStepMessage(StoryStep storyStep, PerformanceStep performanceStep)

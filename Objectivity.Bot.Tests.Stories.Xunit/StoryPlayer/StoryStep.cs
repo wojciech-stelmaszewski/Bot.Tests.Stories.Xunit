@@ -21,6 +21,8 @@
 
         public string Message { get; set; }
 
+        public bool IsDialogResultCheckupStep => this.StoryFrame != null && this.StoryFrame is DialogStoryFrame;
+
         public StoryPlayerStepStatus Status { get; set; }
 
         public IStoryFrame StoryFrame { get; set; }

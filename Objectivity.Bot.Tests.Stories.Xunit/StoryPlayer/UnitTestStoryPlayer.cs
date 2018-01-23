@@ -33,7 +33,9 @@
 
                 var performanceSteps = await storyPerformer.Perform(story);
 
-                await StoryAsserts.AssertStory(story, performanceSteps);
+                var storyAsserts = container.Resolve<StoryAsserts>();
+
+                await storyAsserts.AssertStory(story, performanceSteps);
             }
 
             return new StoryResult();

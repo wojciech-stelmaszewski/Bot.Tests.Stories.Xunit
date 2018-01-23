@@ -13,7 +13,7 @@
     using StoryPerformer;
     using StoryPlayer;
 
-    public static class StoryAsserts
+    public class StoryAsserts
     {
         private const string NotMatchingActorMessageFormat = "Not matching actors on performance step with index = {0}. Expected actor: {1}, actual actor: {2}.";
         private const string PerformanceStepNotCoveredMessage =
@@ -22,7 +22,14 @@
         private const string StoryStepNotCoveredMessage =
             "Error while testing a story: test story produced a step #{0} from {1} with message '{2}' which was not covered by performed story.";
 
-        public static Task AssertStory(IStory story, List<PerformanceStep> performanceSteps)
+        private readonly WrappedDialogResult wrappedDialogResult;
+
+        public StoryAsserts(WrappedDialogResult wrappedDialogResult)
+        {
+            this.wrappedDialogResult = wrappedDialogResult;
+        }
+
+        public Task AssertStory(IStory story, List<PerformanceStep> performanceSteps)
         {
             var storySteps = story.StoryFrames
                 .Select((storyFrame, stepIndex) => new StoryStep(storyFrame)
@@ -36,7 +43,7 @@
 
             for (var i = 0; i < stepsCount; i++)
             {
-                AssertStoryStep(performanceSteps, storySteps, i);
+                this.AssertStoryStep(performanceSteps, storySteps, i);
             }
 
             return Task.CompletedTask;
@@ -57,7 +64,7 @@
             return string.Format(CultureInfo.InvariantCulture, format, step?.StepIndex, step?.Actor, step?.Message);
         }
 
-        private static void AssertStoryStep(
+        private void AssertStoryStep(
             List<PerformanceStep> performanceSteps,
             IReadOnlyList<StoryStep> storySteps,
             int stepIndex)
@@ -75,11 +82,18 @@
                 Assert.True(false, GetNotCoveredStoryStepMessage(PerformanceStepNotCoveredMessage, performanceStep));
             }
 
-            Assert.True(storyStep?.Actor == performanceStep?.Actor, GetNotMatchingActorMessage(storyStep, performanceStep));
+            if (performanceStep == null && storyStep != null && storyStep.IsDialogResultCheckupStep)
+            {
+                StepAsserts.AssertDialogFinishStep(storyStep, this.wrappedDialogResult);
+            }
+            else
+            {
+                Assert.True(storyStep.Actor == performanceStep.Actor, GetNotMatchingActorMessage(storyStep, performanceStep));
 
-            var options = performanceSteps.TryGetOptions(stepIndex);
+                var options = performanceSteps.TryGetOptions(stepIndex);
 
-            StepAsserts.AssertStep(storyStep, performanceStep, options);
+                StepAsserts.AssertStep(storyStep, performanceStep, options);
+            }
         }
     }
 }
