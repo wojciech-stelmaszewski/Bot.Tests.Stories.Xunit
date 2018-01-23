@@ -78,7 +78,7 @@
                 .User.Says("40")
                 .Bot.Says("Type second number:")
                 .User.Says("NaN")
-                .DialogFailedWithExceptionOfType<FormatException>();
+                .DialogFailedWithExceptionOfType<ArgumentNullException>();
 
             await this.ThrowsTrueException(story, WrongExceptionTypeMessagePattern);
         }
