@@ -16,7 +16,7 @@
                 .User.Says("Hi")
                 .Bot.Says("How are you?")
                 .User.Says("I'm fine!")
-                .Rewind();
+                .DialogDone();
 
             await this.Play(story);
         }

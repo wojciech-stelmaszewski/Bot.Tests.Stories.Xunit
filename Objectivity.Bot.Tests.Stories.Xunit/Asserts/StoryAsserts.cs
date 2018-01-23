@@ -72,23 +72,23 @@
             var storyStep = storySteps.Count > stepIndex ? storySteps[stepIndex] : null;
             var performanceStep = performanceSteps.Count > stepIndex ? performanceSteps[stepIndex] : null;
 
-            if (storyStep != null && performanceStep == null)
-            {
-                Assert.True(false, GetNotCoveredStoryStepMessage(StoryStepNotCoveredMessage, storyStep));
-            }
-
-            if (storyStep == null && performanceStep != null)
+            if (storyStep == null)
             {
                 Assert.True(false, GetNotCoveredStoryStepMessage(PerformanceStepNotCoveredMessage, performanceStep));
             }
 
-            if (performanceStep == null && storyStep != null && storyStep.IsDialogResultCheckupStep)
+            if (performanceStep == null && !storyStep.IsDialogResultCheckupStep)
+            {
+                Assert.True(false, GetNotCoveredStoryStepMessage(StoryStepNotCoveredMessage, storyStep));
+            }
+
+            if (storyStep.IsDialogResultCheckupStep)
             {
                 StepAsserts.AssertDialogFinishStep(storyStep, this.wrappedDialogResult);
             }
             else
             {
-                Assert.True(storyStep.Actor == performanceStep.Actor, GetNotMatchingActorMessage(storyStep, performanceStep));
+                Assert.True(storyStep != null && storyStep.Actor == performanceStep?.Actor, GetNotMatchingActorMessage(storyStep, performanceStep));
 
                 var options = performanceSteps.TryGetOptions(stepIndex);
 

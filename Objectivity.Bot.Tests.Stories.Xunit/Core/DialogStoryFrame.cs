@@ -1,14 +1,9 @@
 ﻿namespace Objectivity.Bot.Tests.Stories.Xunit.Core
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Microsoft.Bot.Connector;
     using Newtonsoft.Json.Linq;
-    using Objectivity.Bot.Tests.Stories.StoryModel;
-    using static Microsoft.Bot.Builder.Luis.Models.DialogResponse;
+    using StoryModel;
 
     public class DialogStoryFrame : IStoryFrame
     {

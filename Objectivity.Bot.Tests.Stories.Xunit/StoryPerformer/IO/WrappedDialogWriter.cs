@@ -18,23 +18,27 @@
             this.conversationService = conversationService;
         }
 
-        public async Task<IMessageActivity> SentActivity(IStoryFrame frame)
+        public async Task SendActivity(IMessageActivity messageActivity)
         {
-            var message = this.GetUserStepMessage(frame);
-
             try
             {
-                var messageActivity = this.conversationService.GetToBotActivity(message);
                 await TestConversation.SendAsync(this.scopeContext.Scope, messageActivity);
-
-                return messageActivity;
             }
             catch (MockException mockException)
             {
+                var message = messageActivity?.Text;
+
                 throw new UnmatchedUtteranceException(
                     $"Error while sending user message - matching intent couldn't be found. Check if unit test registers intent for the following utterance: {message}.",
                     mockException);
             }
+        }
+
+        public async Task<IMessageActivity> GetStepMessageActivity(IStoryFrame frame)
+        {
+            var message = this.GetUserStepMessage(frame);
+
+            return this.conversationService.GetToBotActivity(message);
         }
 
         private string GetUserStepMessage(IStoryFrame frame)

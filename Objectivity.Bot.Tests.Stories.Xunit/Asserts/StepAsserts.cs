@@ -4,16 +4,20 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using Core;
     using global::Xunit;
     using Microsoft.Bot.Connector;
     using Newtonsoft.Json.Linq;
-    using Objectivity.Bot.Tests.Stories.Xunit.Core;
     using StoryModel;
     using StoryPerformer;
     using StoryPlayer;
 
     public static class StepAsserts
     {
+        private const string NotEqualDialogStatusMessageFormat = "Expected dialog status = '{0}', actual status = '{1}'";
+        private const string NotEqualDialogResultMessageFormat = "Dialog result = '{0}' doesn't match test predicate.";
+        private const string WrongDialogResultTypeMessageFormat = "Dialog result = '{0}' is not of an expected type.";
+        private const string ResultEmptyMessage = "Couldn't check result predicate - result is null.";
         private const string MessageType = "message";
 
         public static void AssertStep(StoryStep storyStep, PerformanceStep performanceStep, string[] options = null)
@@ -31,9 +35,45 @@
 
         public static void AssertDialogFinishStep(StoryStep storyStep, WrappedDialogResult dialogResult)
         {
-            var dialogStoryFrame = storyStep.StoryFrame as DialogStoryFrame;
+            if (!(storyStep.StoryFrame is DialogStoryFrame dialogStoryFrame))
+            {
+                return;
+            }
 
-            Assert.Equal(dialogStoryFrame.DialogStatus, dialogResult.DialogStatus);
+            var notEqualStatusesMessage = string.Format(
+                    CultureInfo.CurrentCulture,
+                    NotEqualDialogStatusMessageFormat,
+                    dialogStoryFrame.DialogStatus,
+                    dialogResult.DialogStatus);
+
+            Assert.True(dialogStoryFrame.DialogStatus == dialogResult.DialogStatus, notEqualStatusesMessage);
+
+            if (dialogStoryFrame.ResultPredicate != null && dialogResult.Result == null)
+            {
+                Assert.True(false, ResultEmptyMessage);
+            }
+
+            if (dialogStoryFrame.ResultPredicate != null)
+            {
+                try
+                {
+                    var notEqualResultMessage = string.Format(
+                        CultureInfo.CurrentCulture,
+                        NotEqualDialogResultMessageFormat,
+                        dialogResult.Result);
+
+                    Assert.True(dialogStoryFrame.ResultPredicate(dialogResult.Result), notEqualResultMessage);
+                }
+                catch (InvalidCastException)
+                {
+                    var wrongDialogResultTypeMessage = string.Format(
+                        CultureInfo.CurrentCulture,
+                        WrongDialogResultTypeMessageFormat,
+                        dialogResult.Result);
+
+                    Assert.True(false, wrongDialogResultTypeMessage);
+                }
+            }
         }
 
         private static void AssertBotStepMessage(StoryStep storyStep, PerformanceStep performanceStep)

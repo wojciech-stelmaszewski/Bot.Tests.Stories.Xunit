@@ -1,13 +1,9 @@
 ﻿namespace Objectivity.Bot.Tests.Stories.Xunit
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Objectivity.Bot.Tests.Stories.Recorder;
-    using Objectivity.Bot.Tests.Stories.StoryModel;
-    using Objectivity.Bot.Tests.Stories.Xunit.Core;
+    using Core;
+    using Recorder;
+    using StoryModel;
 
     public static class StoryRecorderExtensions
     {

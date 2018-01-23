@@ -8,7 +8,7 @@
 
     public static class ActorsAssert
     {
-        public static async Task ThrowsTrueException(IStoryPlayer storyPlayer, IStory story, string messagePattern = null)
+        public static async Task ThrowsTrueException(this IStoryPlayer storyPlayer, IStory story, string messagePattern = null)
         {
             async Task TestCode()
             {

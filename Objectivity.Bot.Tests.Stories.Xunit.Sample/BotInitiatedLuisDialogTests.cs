@@ -47,8 +47,8 @@
         {
             var story = StoryRecorder
                 .Record()
-                .User.Says("Hi")
-                .Bot.Says("Hi")
+                .User.Says("Play intent 1")
+                .Bot.Says("Intent 1")
                 .Rewind();
 
             await Assert.ThrowsAsync<TrueException>(async () =>

@@ -17,7 +17,7 @@
                 .Bot.Says("You said: hi")
                 .User.Says("hello")
                 .Bot.Says("You said: hello")
-                .Rewind();
+                .DialogDone();
 
             await this.Play(story);
         }

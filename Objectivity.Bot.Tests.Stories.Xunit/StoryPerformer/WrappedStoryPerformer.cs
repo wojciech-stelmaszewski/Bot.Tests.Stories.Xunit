@@ -1,5 +1,6 @@
 ﻿namespace Objectivity.Bot.Tests.Stories.Xunit.StoryPerformer
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -17,10 +18,16 @@
         private readonly IDialogReader dialogReader;
         private readonly IDialogWriter dialogWriter;
         private readonly IPerformanceStory performanceStory;
+        private readonly WrappedDialogResult wrappedDialogResult;
 
-        public WrappedStoryPerformer(IScopeContext scopeContext, IConversationService conversationService)
+        public WrappedStoryPerformer(
+            IScopeContext scopeContext,
+            IConversationService conversationService,
+            WrappedDialogResult wrappedDialogResult)
         {
             this.conversationService = conversationService;
+
+            this.wrappedDialogResult = wrappedDialogResult;
 
             this.performanceStory = new PerformanceStory();
             this.dialogReader = new WrapperDialogReader(scopeContext);
@@ -31,15 +38,23 @@
         {
             var steps = this.GetStorySteps(testStory);
 
-            foreach (var step in steps)
+            try
             {
-                this.PushStartupMessageActivities();
+                foreach (var step in steps)
+                {
+                    this.PushStartupMessageActivities();
 
-                await this.WriteUserMessageActivity(step);
+                    await this.WriteUserMessageActivity(step);
 
-                this.ReadBotMessageActivities();
+                    this.ReadBotMessageActivities();
 
-                this.TrySetLatestOptions();
+                    this.TrySetLatestOptions();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.wrappedDialogResult.DialogStatus = DialogStatus.Failed;
+                this.wrappedDialogResult.Exception = ex;
             }
 
             return this.performanceStory.Steps;
@@ -87,8 +102,10 @@
         {
             if (step.Actor == Actor.User)
             {
-                var activity = await this.dialogWriter.SentActivity(step.StoryFrame);
-                this.performanceStory.AddStep(activity, Actor.User);
+                var messageActivity = await this.dialogWriter.GetStepMessageActivity(step.StoryFrame);
+                this.performanceStory.AddStep(messageActivity, Actor.User);
+
+                await this.dialogWriter.SendActivity(messageActivity);
             }
         }
     }

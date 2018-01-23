@@ -6,6 +6,8 @@
 
     public interface IDialogWriter
     {
-        Task<IMessageActivity> SentActivity(IStoryFrame frame);
+        Task SendActivity(IMessageActivity messageActivity);
+
+        Task<IMessageActivity> GetStepMessageActivity(IStoryFrame frame);
     }
 }

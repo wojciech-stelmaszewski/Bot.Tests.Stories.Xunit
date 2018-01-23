@@ -13,5 +13,7 @@
         public object Result { get; set; }
 
         public DialogStatus DialogStatus { get; set; }
+
+        public Exception Exception { get; set; }
     }
 }

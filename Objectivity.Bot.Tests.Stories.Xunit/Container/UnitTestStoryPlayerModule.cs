@@ -1,10 +1,10 @@
 ﻿namespace Objectivity.Bot.Tests.Stories.Xunit.Container
 {
+    using Asserts;
     using Autofac;
     using Core;
     using Dialogs;
     using Microsoft.Bot.Builder.Dialogs;
-    using Objectivity.Bot.Tests.Stories.Xunit.Asserts;
     using StoryPerformer;
 
     public class UnitTestStoryPlayerModule : Module
@@ -20,7 +20,7 @@
         {
             base.Load(builder);
 
-            builder.RegisterType<WrappedDialogResult>();
+            builder.RegisterType<WrappedDialogResult>().SingleInstance();
             builder.RegisterType<StoryAsserts>();
 
             builder
