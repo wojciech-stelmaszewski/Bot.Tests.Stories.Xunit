@@ -49,6 +49,94 @@ public class EchoDialogTests : DialogUnitTestBase<EchoDialog>
 }
 ```
 
+### Dialog finish scenarios
+
+You can also define various dialog finish scenarios.
+
+#### Dialog Done
+
+The example below assumes the Dialog calls `context.Done()` after bot posts first reply.
+
+```cs
+public class MyDialogTests : DialogUnitTestBase<MyDialog>
+{
+    [Fact]
+    public async Task HelloTest()
+    {
+        var story = StoryRecorder
+            .Record()
+            .User.Says("Hi")
+            .Bot.Says("Good bye")
+            .DialogDone();
+
+        await this.Play(story);
+    }
+}
+```
+
+#### Dialog Done with result predicate
+
+The example below assumes the Dialog calls `context.Done(true)` after bot posts first reply.
+
+```cs
+public class MyDialogTests : DialogUnitTestBase<MyDialog>
+{
+    [Fact]
+    public async Task HelloTest()
+    {
+        var story = StoryRecorder
+            .Record()
+            .User.Says("Hi")
+            .Bot.Says("Good bye")
+            .DialogDoneWithResult<bool>(result => result == true);
+
+        await this.Play(story);
+    }
+}
+```
+
+#### Dialog Failed
+
+The example below assumes the Dialog calls `context.Fail(ex)` with any kind of exception after first user sentence.
+
+```cs
+public class MyDialogTests : DialogUnitTestBase<MyDialog>
+{
+    [Fact]
+    public async Task HelloTest()
+    {
+        var story = StoryRecorder
+            .Record()
+            .Bot.Says("Type a number:")
+            .User.Says("Ok")
+            .DialogFailed();
+
+        await this.Play(story);
+    }
+}
+```
+
+#### Dialog Failed with expected exception type
+
+The example below assumes the Dialog calls `context.Fail(ex)` with specific kind of exception after first user sentence.
+
+```cs
+public class MyDialogTests : DialogUnitTestBase<MyDialog>
+{
+    [Fact]
+    public async Task HelloTest()
+    {
+        var story = StoryRecorder
+            .Record()
+            .Bot.Says("Type a number:")
+            .User.Says("Ok")
+            .DialogFailedWithExceptionOfType<FormatException>();
+
+        await this.Play(story);
+    }
+}
+```
+
 ### LUIS dialogs
 
 To develop a unit test for a LUIS dialog (inheriting `LuisDialog<object>` class), create new test class inheriting from `Objectivity.Bot.Tests.Stories.Xunit.LuisDialogUnitTestBase<T>` class, providing your dialog Type as generic parameter. Then for each test please go through the following steps:
