@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using Core;
     using global::Xunit;
     using Microsoft.Bot.Connector;
     using Newtonsoft.Json.Linq;
@@ -14,11 +13,6 @@
 
     public static class StepAsserts
     {
-        private const string WrongExceptionTypeMessageFormat = "Expected dialog fail with exception of type = '{0}', actual exception type = '{1}'";
-        private const string NotEqualDialogStatusMessageFormat = "Expected dialog status = '{0}', actual status = '{1}'";
-        private const string NotEqualDialogResultMessageFormat = "Dialog result = '{0}' doesn't match test predicate.";
-        private const string WrongDialogResultTypeMessageFormat = "Dialog result = '{0}' is not of an expected type.";
-        private const string ResultEmptyMessage = "Couldn't check result predicate - result is null.";
         private const string MessageType = "message";
 
         public static void AssertStep(StoryStep storyStep, PerformanceStep performanceStep, string[] options = null)
@@ -31,64 +25,6 @@
                 case Actor.User:
                     AssertUserStepMessage(storyStep, performanceStep, options);
                     break;
-            }
-        }
-
-        public static void AssertDialogFinishStep(StoryStep storyStep, WrappedDialogResult dialogResult)
-        {
-            if (!(storyStep.StoryFrame is DialogStoryFrame dialogStoryFrame))
-            {
-                return;
-            }
-
-            var notEqualStatusesMessage = string.Format(
-                CultureInfo.CurrentCulture,
-                NotEqualDialogStatusMessageFormat,
-                dialogStoryFrame.DialogStatus,
-                dialogResult.DialogStatus);
-
-            Assert.True(dialogStoryFrame.DialogStatus == dialogResult.DialogStatus, notEqualStatusesMessage);
-
-            if (dialogStoryFrame.ResultPredicate != null && dialogResult.Result == null)
-            {
-                Assert.True(false, ResultEmptyMessage);
-            }
-
-            if (dialogStoryFrame.ResultPredicate != null)
-            {
-                try
-                {
-                    var notEqualResultMessage = string.Format(
-                        CultureInfo.CurrentCulture,
-                        NotEqualDialogResultMessageFormat,
-                        dialogResult.Result);
-
-                    Assert.True(dialogStoryFrame.ResultPredicate(dialogResult.Result), notEqualResultMessage);
-                }
-                catch (InvalidCastException)
-                {
-                    var wrongDialogResultTypeMessage = string.Format(
-                        CultureInfo.CurrentCulture,
-                        WrongDialogResultTypeMessageFormat,
-                        dialogResult.Result);
-
-                    Assert.True(false, wrongDialogResultTypeMessage);
-                }
-            }
-
-            if (dialogStoryFrame.ExceptionType != null)
-            {
-                var exceptionType = dialogResult.Exception.GetType();
-
-                var wrongExceptionTypeMessage = string.Format(
-                    CultureInfo.CurrentCulture,
-                    WrongExceptionTypeMessageFormat,
-                    dialogStoryFrame.ExceptionType.Name,
-                    exceptionType.Name);
-
-                Assert.True(
-                    dialogResult.Exception.GetType() == dialogStoryFrame.ExceptionType,
-                    wrongExceptionTypeMessage);
             }
         }
 

@@ -84,7 +84,7 @@
 
             if (storyStep.IsDialogResultCheckupStep)
             {
-                StepAsserts.AssertDialogFinishStep(storyStep, this.wrappedDialogResult);
+                FinishStepAsserts.AssertDialogFinishStep(storyStep, this.wrappedDialogResult);
             }
             else
             {

@@ -6,7 +6,7 @@
     using Player;
     using StoryModel;
 
-    public static class ActorsAssert
+    public static class StoryPlayerAssertsExtensions
     {
         public static async Task ThrowsTrueException(this IStoryPlayer storyPlayer, IStory story, string messagePattern = null)
         {
