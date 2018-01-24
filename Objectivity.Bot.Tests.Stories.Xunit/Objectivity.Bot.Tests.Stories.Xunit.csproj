@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net47</TargetFramework>
+    <TargetFramework>net46</TargetFramework>
     <CodeAnalysisRuleSet>..\Analysers.ruleset</CodeAnalysisRuleSet>
     <Version>0.0.0.0</Version>
     <PackageVersion>0.0.0.0</PackageVersion>
@@ -21,11 +21,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Bot.Builder" Version="3.12.2.4" />
-    <PackageReference Include="Moq" Version="4.7.145" />
-    <PackageReference Include="Objectivity.Bot.Tests.Stories" Version="0.0.15" />
+    <PackageReference Include="Microsoft.Bot.Builder" Version="3.11.0" />
+    <PackageReference Include="Moq" Version="4.7.142" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="All" />
-    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Objectivity.Bot.Tests.Stories\Objectivity.Bot.Tests.Stories.csproj" />
   </ItemGroup>
 
   <ItemGroup>
