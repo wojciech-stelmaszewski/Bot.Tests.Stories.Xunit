@@ -42,6 +42,37 @@
         }
 
         [Fact]
+        public async Task Sum40With60_PlayStoryIsCalled_IntDialogResultIsEqualTo100()
+        {
+            var story = StoryRecorder
+                .Record()
+                .Bot.Says("Type first number:")
+                .User.Says("40")
+                .Bot.Says("Type second number:")
+                .User.Says("60")
+                .DialogDoneWithResult<int>(result => result >= 100);
+
+            await this.Play(story);
+        }
+
+        [Fact]
+        public async Task ExpectStringDialogResult_PlayStoryIsCalled_FormatExceptionThrown()
+        {
+            var story = StoryRecorder
+                .Record()
+                .Bot.Says("Type first number:")
+                .User.Says("40")
+                .Bot.Says("Type second number:")
+                .User.Says("60")
+                .DialogDoneWithResult<string>(string.IsNullOrEmpty);
+
+            await Assert.ThrowsAsync<FormatException>(async () =>
+            {
+                await this.Play(story);
+            });
+        }
+
+        [Fact]
         public async Task Sum40WithNaN_PlayStoryIsCalled_DialogFailedExpected()
         {
             var story = StoryRecorder

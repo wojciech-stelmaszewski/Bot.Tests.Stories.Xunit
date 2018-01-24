@@ -22,6 +22,7 @@
 
             builder.RegisterType<WrappedDialogResult>().SingleInstance();
             builder.RegisterType<StoryAsserts>();
+            builder.RegisterType<FinishStepAsserts>();
 
             builder
                 .Register<IDialog<object>>(ctx =>

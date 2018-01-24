@@ -7,7 +7,7 @@
     {
         public WrappedDialogResult()
         {
-            this.DialogStatus = DialogStatus.Busy;
+            this.DialogStatus = DialogStatus.Idle;
         }
 
         public object Result { get; set; }

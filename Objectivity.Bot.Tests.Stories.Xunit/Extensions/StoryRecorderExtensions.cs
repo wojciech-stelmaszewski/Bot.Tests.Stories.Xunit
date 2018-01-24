@@ -17,6 +17,28 @@
             return GetResultStory(recorder, DialogStatus.Finished, resultPredicate);
         }
 
+        public static IStory DialogDoneWithResult<T>(this IStoryRecorder recorder, Predicate<T> resultPredicate)
+        {
+            return GetResultStory(recorder, DialogStatus.Finished, resultObject =>
+            {
+                T result;
+
+                try
+                {
+                    result = (T)resultObject;
+                }
+                catch
+                {
+                    var message =
+                        $"Unable to cast result of type '{resultObject.GetType().Name}' to type '{typeof(T).Name}'.";
+
+                    throw new FormatException(message);
+                }
+
+                return resultPredicate(result);
+            });
+        }
+
         public static IStory DialogFailed(this IStoryRecorder recorder)
         {
             return GetResultStory(recorder, DialogStatus.Failed);

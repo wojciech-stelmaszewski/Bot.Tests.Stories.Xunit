@@ -22,11 +22,11 @@
         private const string StoryStepNotCoveredMessage =
             "Error while testing a story: test story produced a step #{0} from {1} with message '{2}' which was not covered by performed story.";
 
-        private readonly WrappedDialogResult wrappedDialogResult;
+        private readonly FinishStepAsserts finishStepAsserts;
 
-        public StoryAsserts(WrappedDialogResult wrappedDialogResult)
+        public StoryAsserts(FinishStepAsserts finishStepAsserts)
         {
-            this.wrappedDialogResult = wrappedDialogResult;
+            this.finishStepAsserts = finishStepAsserts;
         }
 
         public Task AssertStory(IStory story, List<PerformanceStep> performanceSteps)
@@ -84,7 +84,7 @@
 
             if (storyStep.IsDialogResultCheckupStep)
             {
-                FinishStepAsserts.AssertDialogFinishStep(storyStep, this.wrappedDialogResult);
+                this.finishStepAsserts.AssertDialogFinishStep(storyStep);
             }
             else
             {

@@ -6,38 +6,56 @@
     using global::Xunit;
     using StoryPlayer;
 
-    public static class FinishStepAsserts
+    public class FinishStepAsserts
     {
         private const string WrongExceptionTypeMessageFormat = "Expected dialog fail with exception of type = '{0}', actual exception type = '{1}'";
+        private const string NoExceptionMessageFormat = "Expected dialog fail with exception of type = '{0}', but no exception was threw.";
         private const string NotEqualDialogStatusMessageFormat = "Expected dialog status = '{0}', actual status = '{1}'";
         private const string NotEqualDialogResultMessageFormat = "Dialog result = '{0}' doesn't match test predicate.";
         private const string WrongDialogResultTypeMessageFormat = "Dialog result = '{0}' is not of an expected type.";
         private const string ResultEmptyMessage = "Couldn't check result predicate - result is null.";
 
-        public static void AssertDialogFinishStep(StoryStep storyStep, WrappedDialogResult dialogResult)
+        private readonly WrappedDialogResult dialogResult;
+
+        public FinishStepAsserts(WrappedDialogResult dialogResult)
+        {
+            this.dialogResult = dialogResult;
+        }
+
+        public void AssertDialogFinishStep(StoryStep storyStep)
         {
             if (!(storyStep.StoryFrame is DialogStoryFrame dialogStoryFrame))
             {
                 return;
             }
 
-            VerifyStatusesEqual(dialogResult, dialogStoryFrame);
-            VerifyResultNotEmpty(dialogResult, dialogStoryFrame);
+            this.VerifyStatusesEqual(dialogStoryFrame);
+            this.VerifyResultNotEmpty(dialogStoryFrame);
 
             if (dialogStoryFrame.ResultPredicate != null)
             {
-                VerifyResultPredicate(dialogResult, dialogStoryFrame);
+                this.VerifyResultPredicate(dialogStoryFrame);
             }
 
             if (dialogStoryFrame.ExceptionType != null)
             {
-                VerifyExceptionType(dialogResult, dialogStoryFrame);
+                this.VerifyExceptionType(dialogStoryFrame);
             }
         }
 
-        private static void VerifyExceptionType(WrappedDialogResult dialogResult, DialogStoryFrame dialogStoryFrame)
+        private void VerifyExceptionType(DialogStoryFrame dialogStoryFrame)
         {
-            var exceptionType = dialogResult.Exception.GetType();
+            if (this.dialogResult.Exception == null)
+            {
+                var noExceptionMessage = string.Format(
+                    CultureInfo.CurrentCulture,
+                    NoExceptionMessageFormat,
+                    dialogStoryFrame.ExceptionType.Name);
+
+                Assert.True(false, noExceptionMessage);
+            }
+
+            var exceptionType = this.dialogResult.Exception.GetType();
 
             var wrongExceptionTypeMessage = string.Format(
                 CultureInfo.CurrentCulture,
@@ -46,49 +64,49 @@
                 exceptionType.Name);
 
             Assert.True(
-                dialogResult.Exception.GetType() == dialogStoryFrame.ExceptionType,
+                this.dialogResult.Exception.GetType() == dialogStoryFrame.ExceptionType,
                 wrongExceptionTypeMessage);
         }
 
-        private static void VerifyResultPredicate(WrappedDialogResult dialogResult, DialogStoryFrame dialogStoryFrame)
+        private void VerifyResultPredicate(DialogStoryFrame dialogStoryFrame)
         {
             try
             {
                 var notEqualResultMessage = string.Format(
                     CultureInfo.CurrentCulture,
                     NotEqualDialogResultMessageFormat,
-                    dialogResult.Result);
+                    this.dialogResult.Result);
 
-                Assert.True(dialogStoryFrame.ResultPredicate(dialogResult.Result), notEqualResultMessage);
+                Assert.True(dialogStoryFrame.ResultPredicate(this.dialogResult.Result), notEqualResultMessage);
             }
             catch (InvalidCastException)
             {
                 var wrongDialogResultTypeMessage = string.Format(
                     CultureInfo.CurrentCulture,
                     WrongDialogResultTypeMessageFormat,
-                    dialogResult.Result);
+                    this.dialogResult.Result);
 
                 Assert.True(false, wrongDialogResultTypeMessage);
             }
         }
 
-        private static void VerifyResultNotEmpty(WrappedDialogResult dialogResult, DialogStoryFrame dialogStoryFrame)
+        private void VerifyResultNotEmpty(DialogStoryFrame dialogStoryFrame)
         {
-            if (dialogStoryFrame.ResultPredicate != null && dialogResult.Result == null)
+            if (dialogStoryFrame.ResultPredicate != null && this.dialogResult.Result == null)
             {
                 Assert.True(false, ResultEmptyMessage);
             }
         }
 
-        private static void VerifyStatusesEqual(WrappedDialogResult dialogResult, DialogStoryFrame dialogStoryFrame)
+        private void VerifyStatusesEqual(DialogStoryFrame dialogStoryFrame)
         {
             var notEqualStatusesMessage = string.Format(
                             CultureInfo.CurrentCulture,
                             NotEqualDialogStatusMessageFormat,
                             dialogStoryFrame.DialogStatus,
-                            dialogResult.DialogStatus);
+                            this.dialogResult.DialogStatus);
 
-            Assert.True(dialogStoryFrame.DialogStatus == dialogResult.DialogStatus, notEqualStatusesMessage);
+            Assert.True(dialogStoryFrame.DialogStatus == this.dialogResult.DialogStatus, notEqualStatusesMessage);
         }
     }
 }

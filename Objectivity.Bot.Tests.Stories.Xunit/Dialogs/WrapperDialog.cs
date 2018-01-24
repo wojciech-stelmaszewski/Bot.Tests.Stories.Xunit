@@ -22,7 +22,7 @@
 
         public async Task StartAsync(IDialogContext context)
         {
-            this.wrappedDialogResult.DialogStatus = DialogStatus.Busy;
+            this.wrappedDialogResult.DialogStatus = DialogStatus.InProgress;
 
             await context.PostAsync(Consts.WrapperStartMessage);
 

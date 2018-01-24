@@ -3,7 +3,7 @@
     public enum DialogStatus
     {
         Idle,
-        Busy,
+        InProgress,
         Finished,
         Failed
     }
