@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net46</TargetFramework>
     <CodeAnalysisRuleSet>..\Analysers.ruleset</CodeAnalysisRuleSet>
-    <Version>0.0.0.0</Version>
-    <PackageVersion>0.0.0.0</PackageVersion>
-    <AssemblyVersion>0.0.0.0</AssemblyVersion>
-    <FileVersion>0.0.0.0</FileVersion>
+    <Version>0.2.0.421</Version>
+    <PackageVersion>0.2.0.421</PackageVersion>
+    <AssemblyVersion>0.2.0.421</AssemblyVersion>
+    <FileVersion>0.2.0.421</FileVersion>
     <InformationalVersion>0.0.0.0</InformationalVersion>
     <IsPackable>true</IsPackable>
     <Authors>Objectivity Bespoke Software Specialists</Authors>
@@ -18,17 +18,15 @@
     <RepositoryUrl>https://github.com/ObjectivityLtd/Bot.Tests.Stories.Xunit</RepositoryUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/mit-license.php</PackageLicenseUrl>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Bot.Builder" Version="3.11.0" />
     <PackageReference Include="Moq" Version="4.7.142" />
+    <PackageReference Include="Objectivity.Bot.Tests.Stories" Version="0.0.15.421" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="All" />
     <PackageReference Include="xunit" Version="2.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Objectivity.Bot.Tests.Stories\Objectivity.Bot.Tests.Stories.csproj" />
   </ItemGroup>
 
   <ItemGroup>
